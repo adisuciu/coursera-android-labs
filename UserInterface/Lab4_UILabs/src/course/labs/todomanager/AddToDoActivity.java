@@ -93,6 +93,8 @@ public class AddToDoActivity extends Activity {
 
 
 				// TODO - Indicate result and finish
+				setResult(RESULT_CANCELED);
+				finish();
 
                 
                 
@@ -107,9 +109,9 @@ public class AddToDoActivity extends Activity {
 
 
 				// TODO - Reset data to default values
-
-
-                
+				mTitleText.setText("");
+				mStatusRadioGroup.check(R.id.statusNotDone);
+				mPriorityRadioGroup.check(R.id.medPriority);
                 
                 
 				// reset date and time
@@ -130,15 +132,15 @@ public class AddToDoActivity extends Activity {
 
 
 				// TODO - Get the current Priority
-				Priority priority = null;
+				Priority priority = getPriority();
 
 				// TODO - Get the current Status
-				Status status = null;
+				Status status = getStatus();
 
 				// TODO - Get the current ToDoItem Title
 
 
-				String titleString = null;
+				String titleString = getToDoTitle();
 
 
 				// Construct the Date string
@@ -150,7 +152,8 @@ public class AddToDoActivity extends Activity {
 						fullDate);
 
 				// TODO - return data Intent and finish
-
+				setResult(RESULT_OK, data);
+				finish();
 
 
 
