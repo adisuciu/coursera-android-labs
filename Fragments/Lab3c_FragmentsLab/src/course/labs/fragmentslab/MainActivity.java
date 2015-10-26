@@ -1,6 +1,7 @@
 package course.labs.fragmentslab;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,9 @@ public class MainActivity extends Activity implements
 		FriendsFragment.SelectionListener {
 
 	private static final String TAG = "Lab-Fragments";
+    private static final String FeedTAG = "feedTag";
+    private static final String FriendsTAG = "friendsTag";
+
 
 	private FriendsFragment mFriendsFragment;
 	private FeedFragment mFeedFragment;
@@ -22,10 +26,19 @@ public class MainActivity extends Activity implements
 		// and add it to the Activity
 
 		if (!isInTwoPaneMode()) {
-			
-			mFriendsFragment = new FriendsFragment();
 
+            Log.i(TAG,"Main.onCreate(1)");
 			//TODO 1 - add the FriendsFragment to the fragment_container
+
+			FragmentManager fragmentManager = getFragmentManager();
+            mFeedFragment = (FeedFragment) fragmentManager.findFragmentByTag(FeedTAG);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            if(mFeedFragment == null)
+			{
+				mFriendsFragment = new FriendsFragment();
+				fragmentTransaction.add(R.id.fragment_container, mFriendsFragment,FriendsTAG);
+			}
+			fragmentTransaction.commit();
 			
 			
 			
@@ -33,7 +46,7 @@ public class MainActivity extends Activity implements
 		} else {
 
 			// Otherwise, save a reference to the FeedFragment for later use
-
+            Log.i(TAG,"Main.onCreate(2)");
 			mFeedFragment = (FeedFragment) getFragmentManager()
 					.findFragmentById(R.id.feed_frag);
 		}
@@ -57,26 +70,41 @@ public class MainActivity extends Activity implements
 
 		// If there is no FeedFragment instance, then create one
 
-		if (mFeedFragment == null)
-			mFeedFragment = new FeedFragment();
+		if (mFeedFragment == null) {
+            mFeedFragment = new FeedFragment();
+            Log.i(TAG, "New Feed created");
+        }
 
 		// If in single-pane mode, replace single visible Fragment
 
 		if (!isInTwoPaneMode()) {
 
 			//TODO 2 - replace the fragment_container with the FeedFragment
-			
-
-			
-
+            Log.i(TAG,"Replace friends with feed");
+            mFriendsFragment = new FriendsFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.addToBackStack("feedFrag");
+            fragmentTransaction.replace(R.id.fragment_container,mFeedFragment,FeedTAG);
+            fragmentTransaction.commit();
 			// execute transaction now
 			getFragmentManager().executePendingTransactions();
 
 		}
 
 		// Update Twitter feed display on FriendFragment
-		mFeedFragment.updateFeedDisplay(position);
+        mFeedFragment.updateFeedDisplay(position);
 
 	}
 
+/*	@Override
+	public void onBackPressed(){
+		if (){
+			finish();
+		}
+		else {
+			super.onBackPressed();
+		}
+	}
+*/
 }

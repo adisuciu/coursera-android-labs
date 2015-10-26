@@ -15,11 +15,21 @@ public class FeedFragment extends Fragment {
 	private TextView mTextView;
 	private static FeedFragmentData feedFragmentData;
 
+    private int pos = -1;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Log.i(TAG, "Feed.onCreateView()");
 
-		return inflater.inflate(R.layout.feed, container, false);
+        return inflater.inflate(R.layout.feed, container, false);
 
 	}
 
@@ -27,24 +37,37 @@ public class FeedFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// Read in all Twitter feeds 
+		// Read in all Twitter feeds
+		Log.i(TAG, "Feed.onActivityCreated()");
 		if (null == feedFragmentData) { 
 			
 			feedFragmentData = new FeedFragmentData(getActivity());
-
 		}
+        if(pos!=-1)
+            updateFeedDisplayFromRetainedInstance();
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.i(TAG, "FeedFragDestroyed");
+	}
 
 	// Display Twitter feed for selected feed
 
 	void updateFeedDisplay(int position) {
 
 		Log.i(TAG, "Entered updateFeedDisplay()");
-				
+        pos = position;
 		mTextView = (TextView) getView().findViewById(R.id.feed_view);
 		mTextView.setText(feedFragmentData.getFeed(position));
 
 	}
+
+    void updateFeedDisplayFromRetainedInstance()
+    {
+        updateFeedDisplay(pos);
+    }
+
 
 }
