@@ -48,11 +48,13 @@ public class MainActivity extends Activity implements SelectionListener,
 	public static final ArrayList<Integer> sRawTextFeedIds = new ArrayList<Integer>(
 			Arrays.asList(R.raw.tswift, R.raw.rblack, R.raw.lgaga));
 
+	private Context mContext;
 	private FragmentManager mFragmentManager;
 	private FriendsFragment mFriendsFragment;
 	private FeedFragment mFeedFragment;
 	private DownloaderTaskFragment mDownloaderFragment;
 	private boolean mIsInteractionEnabled;
+	private IntentFilter mRefreshIntentFilter;
 	private String[] mFormattedFeeds = new String[sRawTextFeedIds.size()];;
 	private boolean mIsFresh;
 	private BroadcastReceiver mRefreshReceiver;
@@ -63,7 +65,9 @@ public class MainActivity extends Activity implements SelectionListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		mContext = getApplicationContext();
 		mFragmentManager = getFragmentManager();
+		mRefreshIntentFilter = new IntentFilter(DATA_REFRESHED_ACTION);
 
 		// Reset instance state on reconfiguration
 		if (null != savedInstanceState) {
@@ -85,9 +89,9 @@ public class MainActivity extends Activity implements SelectionListener,
 
 			// TODO: Show a Toast message displaying
 			// R.string.download_in_progress string
+			Toast t = Toast.makeText(mContext, getString(R.string.download_in_progress_string), Toast.LENGTH_SHORT);
+			t.show();
 
-
-			
 			
 			// Set up a BroadcastReceiver to receive an Intent when download
 			// finishes.
@@ -99,11 +103,11 @@ public class MainActivity extends Activity implements SelectionListener,
 					// Check to make sure this is an ordered broadcast
 					// Let sender know that the Intent was received
 					// by setting result code to MainActivity.IS_ALIVE
+					//if()
 
-
-					
-					
-					
+					if(intent.getAction() == DATA_REFRESHED_ACTION && isOrderedBroadcast()) {
+						setResult(MainActivity.IS_ALIVE, null, null);
+					}
 				}
 			};
 
@@ -153,10 +157,8 @@ public class MainActivity extends Activity implements SelectionListener,
 		// TODO:
 		// Register the BroadcastReceiver to receive a
 		// DATA_REFRESHED_ACTION broadcast
+		registerReceiver(mRefreshReceiver,mRefreshIntentFilter);
 
-		
-		
-		
 	}
 
 	@Override
@@ -172,6 +174,8 @@ public class MainActivity extends Activity implements SelectionListener,
 		
 		
 		super.onPause();
+		if(mRefreshReceiver != null)
+			unregisterReceiver(mRefreshReceiver);
 
 	}
 
