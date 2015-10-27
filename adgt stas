@@ -1,0 +1,19 @@
+[1mdiff --git a/Notifications/Lab6_NotificationsLab/src/course/labs/notificationslab/DownloaderTaskFragment.java b/Notifications/Lab6_NotificationsLab/src/course/labs/notificationslab/DownloaderTaskFragment.java[m
+[1mindex 12f5f71..0ed1729 100644[m
+[1m--- a/Notifications/Lab6_NotificationsLab/src/course/labs/notificationslab/DownloaderTaskFragment.java[m
+[1m+++ b/Notifications/Lab6_NotificationsLab/src/course/labs/notificationslab/DownloaderTaskFragment.java[m
+[36m@@ -108,10 +108,11 @@[m [mpublic class DownloaderTaskFragment extends Fragment {[m
+ [m
+ [m
+ [m
+[31m-        /*@Override[m
+[32m+[m[32m        @Override[m
+         protected void onPostExecute(String[] strings) {[m
+[31m-            mCallback.notifyDataRefreshed(strings);[m
+[31m-        }*/[m
+[32m+[m[32m            if(mCallback != null)[m
+[32m+[m[32m                mCallback.notifyDataRefreshed(strings);[m
+[32m+[m[32m        }[m
+ [m
+         // TODO: Uncomment this helper method[m
+         // Simulates downloading Twitter data from the network[m
